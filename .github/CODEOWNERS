@@ -3,6 +3,8 @@
 # and skills, and the tests (plan/verification.md, "CI is authoritative").
 # Add the repository's contract paths (WIT, abi/, model) when it has them.
 # @Vehicoule alone for now; the second owner is added when he joins.
+# Code owner review is not required by the ruleset yet: one owner cannot
+# approve a pull request opened from the same account.
 /.github/      @Vehicoule
 /verify        @Vehicoule
 /flake.nix     @Vehicoule
