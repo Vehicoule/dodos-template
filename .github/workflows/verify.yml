@@ -1,0 +1,35 @@
+name: verify
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
+      - run: nix develop -c ./verify
+  # Miri and the sanitizer need a nightly compiler, which Nix does not pin
+  # here. Both do nothing until the repository has a Cargo workspace.
+  miri:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - if: hashFiles('Cargo.toml') != ''
+        run: |
+          rustup toolchain install nightly --profile minimal --component miri
+          cargo +nightly miri test --workspace
+  sanitizer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - if: hashFiles('Cargo.toml') != ''
+        run: |
+          rustup toolchain install nightly --profile minimal --component rust-src
+          cargo +nightly test -Zbuild-std --target x86_64-unknown-linux-gnu --lib --tests --workspace
+        env:
+          RUSTFLAGS: -Zsanitizer=address

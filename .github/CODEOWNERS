@@ -1,0 +1,14 @@
+# The paths an agent may not change without the owners: the workflows, the
+# verification command and its pinned environment, the agent instructions
+# and skills, and the tests (plan/verification.md, "CI is authoritative").
+# Add the repository's contract paths (WIT, abi/, model) when it has them.
+# @Vehicoule alone for now; the second owner is added when he joins.
+/.github/      @Vehicoule
+/verify        @Vehicoule
+/flake.nix     @Vehicoule
+/flake.lock    @Vehicoule
+/AGENTS.md     @Vehicoule
+/CLAUDE.md     @Vehicoule
+/.agents/      @Vehicoule
+/.claude/      @Vehicoule
+tests/         @Vehicoule

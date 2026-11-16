@@ -1,0 +1,15 @@
+#!/bin/sh
+# The single verification command, identical locally and in CI.
+set -eu
+cd "$(dirname "$0")"
+# Every internal link and anchor of the Markdown files must resolve; lychee
+# prints how many it checked.
+lychee --offline --include-fragments --no-progress .
+# Rust, once the repository has a Cargo workspace: the kernel's three commands.
+if [ -f Cargo.toml ]; then
+  cargo fmt --all --check
+  cargo clippy --workspace --all-targets -- -D warnings
+  cargo test --workspace
+else
+  echo "rust: no Cargo.toml, nothing to check"
+fi
